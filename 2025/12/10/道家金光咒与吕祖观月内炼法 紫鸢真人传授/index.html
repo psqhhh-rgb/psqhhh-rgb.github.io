@@ -191,76 +191,72 @@
       detectApple()
     })(window)</script><style>
   /* 全局字体 */
-  :root { --anzhiyu-font-family: "KaiTi", "STKaiti", "Baskerville", "Georgia", "FangSong", serif !important; } 
+  :root { --anzhiyu-font-family: "KaiTi", "STKaiti", "Baskerville", "Georgia", "FangSong", serif !important; }
   
   /* =========================================
-     【电脑端 & 平板】标题增强
+     【电脑端】标题增强 (大于768px生效)
      ========================================= */
-  #post-info .post-title,
-  #page-header #site-title,
-  #page-header .site-name {
-    color: #2b1b08 !important;
-    text-shadow: 2px 2px 0px rgba(247, 243, 232, 0.8), -1px -1px 0px rgba(247, 243, 232, 0.8), 0 0 15px rgba(255, 255, 255, 0.9) !important;
-    font-weight: 900 !important;
-    letter-spacing: 2px;
-  }
-  #post-info .post-meta, #post-info .post-meta a {
-     color: #4a2d0d !important;
-     text-shadow: 0 0 5px rgba(255,255,255, 0.8) !important;
+  @media screen and (min-width: 769px) {
+    #post-info .post-title,
+    #page-header #site-title,
+    #page-header .site-name {
+      color: #2b1b08 !important;
+      text-shadow: 2px 2px 0px rgba(247, 243, 232, 0.8), -1px -1px 0px rgba(247, 243, 232, 0.8), 0 0 15px rgba(255, 255, 255, 0.9) !important;
+      font-weight: 900 !important;
+    }
   }
 
   /* =========================================
-     【手机端】核心修复 (max-width: 768px)
+     【手机端】核弹级修复 (max-width: 768px)
      ========================================= */
   @media screen and (max-width: 768px) {
-    /* 1. 【背景强制】把所有可能的层级都改成米黄色，消灭黑色背景 */
-    html, body, #body-wrap, #page-header, .layout, #post, #footer-wrap, #nav {
-      background: #f7f3e8 !important; 
+    
+    /* 1. 【核心】强制重写 CSS 变量 */
+    /* 无论 html 标签上是 data-theme='dark' 还是 'light'，统统强制改为米黄配色 */
+    :root, html, body, [data-theme="dark"], [data-theme="light"] {
+      --anzhiyu-bg: #f7f3e8 !important;        /* 全局背景 */
+      --anzhiyu-card-bg: #f7f3e8 !important;   /* 卡片背景（文章底色） */
+      --anzhiyu-fontcolor: #1a1a1a !important; /* 全局字体颜色 */
+      --global-bg: #f7f3e8 !important;         /* 另一种背景变量 */
+      --text-bg-hover: #e3dec6 !important;     /* 选中颜色 */
+      --anzhiyu-light-text: #4a2d0d !important;/* 浅色文字强制变深 */
+      --anzhiyu-second-text: #5c4e36 !important;/* 次级文字 */
+      --anzhiyu-meta-text: #7a6b5d !important; /* 元信息文字 */
+    }
+
+    /* 2. 【背景层级】强制所有可能的容器背景为米黄 */
+    html, body, #body-wrap, #web_bg, #page-header, #footer, #nav, #post, .layout {
       background-color: #f7f3e8 !important;
       background-image: none !important;
+      background: #f7f3e8 !important;
     }
 
-    /* 2. 【容器修复】文章卡片去阴影、去边框，透明化 */
-    #recent-posts > .recent-post-item, 
-    .layout > .recent-post-item,
-    #post {
+    /* 3. 【文章卡片】去黑底、去阴影 */
+    #post, .recent-post-item, .layout > div {
+      background-color: #f7f3e8 !important;
       box-shadow: none !important;
       border: none !important;
-      border-bottom: 1px solid #dcd3b2 !important;
-      background: transparent !important;
-      padding: 10px !important;
     }
 
-    /* 3. 【正文颜色】强制所有正文段落文字为深褐色，解决看不清的问题 */
-    body, p, li, span, div {
-       color: #2b2b2b; /* 兜底颜色 */
-    }
-    
-    /* 专门针对文章内容的文字颜色 */
-    #article-container,
-    #article-container p,
+    /* 4. 【正文文字】强制纯黑/深褐 */
+    #article-container, 
+    #article-container p, 
     #article-container li,
     #article-container span,
-    #article-container div {
-       color: #1a1a1a !important; /* 接近纯黑的深色 */
+    .post-content {
+      color: #000000 !important; /* 强制纯黑，确保对比度 */
+      text-shadow: none !important;
+    }
+    
+    /* 标题颜色 */
+    h1, h2, h3, h4, h5, h6, .post-title {
+       color: #2b1b08 !important;
        text-shadow: none !important;
     }
 
-    /* 4. 【标题颜色】手机端标题强制深色 */
-    h1, h2, h3, h4, h5, h6, .post-title {
-      color: #4a2d0d !important;
-      text-shadow: none !important;
-      font-weight: bold !important;
-    }
-
-    /* 5. 隐藏多余干扰元素 */
-    #rightside, .post-copyright, .new-meta-box {
-       display: none !important;
-    }
-    
-    /* 6. 导航栏修复 */
-    #nav a, #nav .site-name { color: #5c4e36 !important; text-shadow: none !important; }
-    #nav .menus_items .menus_item .menus_item_child { background-color: #f7f3e8 !important; }
+    /* 5. 隐藏干扰元素 */
+    #rightside { display: none !important; } /* 隐藏右下角按钮，防止误触切换深色模式 */
+    #post-comment { background: #f7f3e8 !important; } /* 评论区背景 */
   }
 </style>
 <meta name="generator" content="Hexo 8.1.1"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://npm.elemecdn.com/anzhiyu-blog-static@1.0.4/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
@@ -395,7 +391,7 @@ if (true) {
   input.setSelectionRange(0, 99999);
   document.execCommand("copy");
   document.body.removeChild(input);
-}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">改变了</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"></div></div></div><div class="post_share"><div class="social-share" data-image="https://bu.dusays.com/2023/04/27/64496e511b09c.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/12/10/%E9%AB%98%E4%BF%8A%E6%B3%A2%E5%85%88%E7%94%9F%E8%80%81%E4%B8%80%E8%BE%88%E4%BC%A0%E6%89%BF%E5%A5%87%E9%97%A8%E9%81%81%E9%AB%98%E7%BA%A7%E5%87%BD%E6%8E%88%E6%95%99%E7%A8%8B12%E8%AE%B2%E5%BD%95%E5%83%8F/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">高俊波先生老一辈传承奇门遁高级函授教程12讲录像</div></div></a></div><div class="next-post pull-right"><a href="/2025/12/10/%E9%A3%8E%E6%B0%B4%E5%A5%BD%E7%9A%84%E6%88%BF%E5%AD%90%EF%BC%8C%E5%BF%83%E9%87%8C%E6%95%9E%E4%BA%AE%EF%BC%8C%E8%84%9A%E4%B8%8B%E6%98%AF%E6%B8%A9%E7%9A%84/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">风水好的房子，心里敞亮，脚下是温的</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/04/27/64496e511b09c.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/08/24/64e6ce9c507bb.png" alt="status"/></div></div><div class="author-info__description">专注正统传承，探索天地奥秘。分享奇门、风水、法术修炼心得。</div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">诸位道友，欢迎光临本站。修行不易，且行且珍惜。</div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://bu.dusays.com/2023/05/13/645fa415e8694.png) center center / 100% no-repeat"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%E4%B8%8E%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E5%86%85%E7%82%BC%E6%B3%95-%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88"><span class="toc-number">1.</span> <span class="toc-text">道家金光咒与吕祖观月内炼法 紫鸢真人传授</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0%EF%BC%9A%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92"><span class="toc-number">1.1.</span> <span class="toc-text">第一章：道家金光咒</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E9%87%91%E5%85%89%E7%A5%9E%E5%92%92"><span class="toc-number">1.1.1.</span> <span class="toc-text">一、 金光神咒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E9%87%91%E5%85%89%E7%AC%A6%E4%B8%8E%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">二、 金光符与用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0%EF%BC%9A%E6%85%A7%E5%89%91%E4%B8%8E%E5%89%91%E6%8C%87%E4%BF%AE%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">第二章：慧剑与剑指修法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E5%89%91%E6%8C%87%E4%B8%8E%E6%8E%8C%E8%AF%80%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.1.</span> <span class="toc-text">一、 剑指与掌诀基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%85%A7%E5%89%91%E5%BF%83%E6%B3%95%EF%BC%88%E5%BF%83%E5%89%91%E5%90%88%E4%B8%80%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">二、 慧剑心法（心剑合一）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0%EF%BC%9A%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E5%86%85%E7%82%BC%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">第三章：吕祖观月内炼法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E8%B5%B7%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">一、 起式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E8%A7%82%E6%83%B3%E6%AD%A5%E9%AA%A4%EF%BC%88%E5%BE%AA%E5%BA%8F%E6%B8%90%E8%BF%9B%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">二、 观想步骤（循序渐进）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%94%B6%E5%8A%9F%E4%B8%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.3.3.</span> <span class="toc-text">三、 收功与注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E4%BC%A0%E6%89%BF%E4%B8%8E%E7%A6%81%E5%BF%8C"><span class="toc-number">1.4.</span> <span class="toc-text">附录：传承与禁忌</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%20%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E6%B3%95%E8%AE%A9%E8%BA%AB%E4%BD%93%E5%8F%98%E9%80%9A%E9%80%8F%E5%8F%98%E4%BA%AE/" title="道家金光咒 吕祖观月法让身体变通透变亮">道家金光咒 吕祖观月法让身体变通透变亮</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%A3%8E%E6%B0%B4%E5%A5%BD%E7%9A%84%E6%88%BF%E5%AD%90%EF%BC%8C%E5%BF%83%E9%87%8C%E6%95%9E%E4%BA%AE%EF%BC%8C%E8%84%9A%E4%B8%8B%E6%98%AF%E6%B8%A9%E7%9A%84/" title="风水好的房子，心里敞亮，脚下是温的">风水好的房子，心里敞亮，脚下是温的</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%E4%B8%8E%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E5%86%85%E7%82%BC%E6%B3%95%20%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88/" title="道家金光咒与吕祖观月内炼法 紫鸢真人传授">道家金光咒与吕祖观月内炼法 紫鸢真人传授</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%AB%98%E4%BF%8A%E6%B3%A2%E5%85%88%E7%94%9F%E8%80%81%E4%B8%80%E8%BE%88%E4%BC%A0%E6%89%BF%E5%A5%87%E9%97%A8%E9%81%81%E9%AB%98%E7%BA%A7%E5%87%BD%E6%8E%88%E6%95%99%E7%A8%8B12%E8%AE%B2%E5%BD%95%E5%83%8F/" title="高俊波先生老一辈传承奇门遁高级函授教程12讲录像">高俊波先生老一辈传承奇门遁高级函授教程12讲录像</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%A3%8E%E6%B0%B4%E6%8C%A8%E6%98%9F%E8%AF%80%20%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/" title="风水挨星诀 厕所布置在哪里比较好">风水挨星诀 厕所布置在哪里比较好</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="闭关修炼中，请勿打扰~" title="闭关修炼中，请勿打扰~"/><div id="runtimeTextTip"></div></div><div class="footer_custom_text">人法地，地法天，天法道，道法自然。</div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2025 By <a class="footer-bar-link" href="/" title="查无此子" target="_blank">查无此子</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">改变了</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"></div></div></div><div class="post_share"><div class="social-share" data-image="https://bu.dusays.com/2023/04/27/64496e511b09c.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/12/10/%E9%A3%8E%E6%B0%B4%E5%A5%BD%E7%9A%84%E6%88%BF%E5%AD%90%EF%BC%8C%E5%BF%83%E9%87%8C%E6%95%9E%E4%BA%AE%EF%BC%8C%E8%84%9A%E4%B8%8B%E6%98%AF%E6%B8%A9%E7%9A%84/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">风水好的房子，心里敞亮，脚下是温的</div></div></a></div><div class="next-post pull-right"><a href="/2025/12/10/%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%20%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E6%B3%95%E8%AE%A9%E8%BA%AB%E4%BD%93%E5%8F%98%E9%80%9A%E9%80%8F%E5%8F%98%E4%BA%AE/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">道家金光咒 吕祖观月法让身体变通透变亮</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/04/27/64496e511b09c.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/08/24/64e6ce9c507bb.png" alt="status"/></div></div><div class="author-info__description">专注正统传承，探索天地奥秘。分享奇门、风水、法术修炼心得。</div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">诸位道友，欢迎光临本站。修行不易，且行且珍惜。</div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://bu.dusays.com/2023/05/13/645fa415e8694.png) center center / 100% no-repeat"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%E4%B8%8E%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E5%86%85%E7%82%BC%E6%B3%95-%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88"><span class="toc-number">1.</span> <span class="toc-text">道家金光咒与吕祖观月内炼法 紫鸢真人传授</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0%EF%BC%9A%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92"><span class="toc-number">1.1.</span> <span class="toc-text">第一章：道家金光咒</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E9%87%91%E5%85%89%E7%A5%9E%E5%92%92"><span class="toc-number">1.1.1.</span> <span class="toc-text">一、 金光神咒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E9%87%91%E5%85%89%E7%AC%A6%E4%B8%8E%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">二、 金光符与用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0%EF%BC%9A%E6%85%A7%E5%89%91%E4%B8%8E%E5%89%91%E6%8C%87%E4%BF%AE%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">第二章：慧剑与剑指修法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E5%89%91%E6%8C%87%E4%B8%8E%E6%8E%8C%E8%AF%80%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.1.</span> <span class="toc-text">一、 剑指与掌诀基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%85%A7%E5%89%91%E5%BF%83%E6%B3%95%EF%BC%88%E5%BF%83%E5%89%91%E5%90%88%E4%B8%80%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">二、 慧剑心法（心剑合一）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0%EF%BC%9A%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E5%86%85%E7%82%BC%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">第三章：吕祖观月内炼法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E8%B5%B7%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">一、 起式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E8%A7%82%E6%83%B3%E6%AD%A5%E9%AA%A4%EF%BC%88%E5%BE%AA%E5%BA%8F%E6%B8%90%E8%BF%9B%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">二、 观想步骤（循序渐进）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%94%B6%E5%8A%9F%E4%B8%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.3.3.</span> <span class="toc-text">三、 收功与注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E4%BC%A0%E6%89%BF%E4%B8%8E%E7%A6%81%E5%BF%8C"><span class="toc-number">1.4.</span> <span class="toc-text">附录：传承与禁忌</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%20%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E6%B3%95%E8%AE%A9%E8%BA%AB%E4%BD%93%E5%8F%98%E9%80%9A%E9%80%8F%E5%8F%98%E4%BA%AE/" title="道家金光咒 吕祖观月法让身体变通透变亮">道家金光咒 吕祖观月法让身体变通透变亮</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%81%93%E5%AE%B6%E9%87%91%E5%85%89%E5%92%92%E4%B8%8E%E5%90%95%E7%A5%96%E8%A7%82%E6%9C%88%E5%86%85%E7%82%BC%E6%B3%95%20%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88/" title="道家金光咒与吕祖观月内炼法 紫鸢真人传授">道家金光咒与吕祖观月内炼法 紫鸢真人传授</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%A3%8E%E6%B0%B4%E5%A5%BD%E7%9A%84%E6%88%BF%E5%AD%90%EF%BC%8C%E5%BF%83%E9%87%8C%E6%95%9E%E4%BA%AE%EF%BC%8C%E8%84%9A%E4%B8%8B%E6%98%AF%E6%B8%A9%E7%9A%84/" title="风水好的房子，心里敞亮，脚下是温的">风水好的房子，心里敞亮，脚下是温的</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%AB%98%E4%BF%8A%E6%B3%A2%E5%85%88%E7%94%9F%E8%80%81%E4%B8%80%E8%BE%88%E4%BC%A0%E6%89%BF%E5%A5%87%E9%97%A8%E9%81%81%E9%AB%98%E7%BA%A7%E5%87%BD%E6%8E%88%E6%95%99%E7%A8%8B12%E8%AE%B2%E5%BD%95%E5%83%8F/" title="高俊波先生老一辈传承奇门遁高级函授教程12讲录像">高俊波先生老一辈传承奇门遁高级函授教程12讲录像</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/%E9%A3%8E%E6%B0%B4%E6%8C%A8%E6%98%9F%E8%AF%80%20%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/" title="风水挨星诀 厕所布置在哪里比较好">风水挨星诀 厕所布置在哪里比较好</a><time datetime="2025-12-10T12:03:01.000Z" title="发表于 2025-12-10 20:03:01">2025-12-10</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="闭关修炼中，请勿打扰~" title="闭关修炼中，请勿打扰~"/><div id="runtimeTextTip"></div></div><div class="footer_custom_text">人法地，地法天，天法道，道法自然。</div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2025 By <a class="footer-bar-link" href="/" title="查无此子" target="_blank">查无此子</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
   if (true) { 
     window.typed = new Typed("#footer-type-tips", {
       strings: ["万物负阴而抱阳，冲气以为和。","天地不仁，以万物为刍狗。","祸兮福之所倚，福兮祸之所伏。"],

@@ -60,7 +60,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2025-12-10 21:33:44',
+  postUpdate: '2025-12-10 21:38:21',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -191,76 +191,72 @@
       detectApple()
     })(window)</script><style>
   /* 全局字体 */
-  :root { --anzhiyu-font-family: "KaiTi", "STKaiti", "Baskerville", "Georgia", "FangSong", serif !important; } 
+  :root { --anzhiyu-font-family: "KaiTi", "STKaiti", "Baskerville", "Georgia", "FangSong", serif !important; }
   
   /* =========================================
-     【电脑端 & 平板】标题增强
+     【电脑端】标题增强 (大于768px生效)
      ========================================= */
-  #post-info .post-title,
-  #page-header #site-title,
-  #page-header .site-name {
-    color: #2b1b08 !important;
-    text-shadow: 2px 2px 0px rgba(247, 243, 232, 0.8), -1px -1px 0px rgba(247, 243, 232, 0.8), 0 0 15px rgba(255, 255, 255, 0.9) !important;
-    font-weight: 900 !important;
-    letter-spacing: 2px;
-  }
-  #post-info .post-meta, #post-info .post-meta a {
-     color: #4a2d0d !important;
-     text-shadow: 0 0 5px rgba(255,255,255, 0.8) !important;
+  @media screen and (min-width: 769px) {
+    #post-info .post-title,
+    #page-header #site-title,
+    #page-header .site-name {
+      color: #2b1b08 !important;
+      text-shadow: 2px 2px 0px rgba(247, 243, 232, 0.8), -1px -1px 0px rgba(247, 243, 232, 0.8), 0 0 15px rgba(255, 255, 255, 0.9) !important;
+      font-weight: 900 !important;
+    }
   }
 
   /* =========================================
-     【手机端】核心修复 (max-width: 768px)
+     【手机端】核弹级修复 (max-width: 768px)
      ========================================= */
   @media screen and (max-width: 768px) {
-    /* 1. 【背景强制】把所有可能的层级都改成米黄色，消灭黑色背景 */
-    html, body, #body-wrap, #page-header, .layout, #post, #footer-wrap, #nav {
-      background: #f7f3e8 !important; 
+    
+    /* 1. 【核心】强制重写 CSS 变量 */
+    /* 无论 html 标签上是 data-theme='dark' 还是 'light'，统统强制改为米黄配色 */
+    :root, html, body, [data-theme="dark"], [data-theme="light"] {
+      --anzhiyu-bg: #f7f3e8 !important;        /* 全局背景 */
+      --anzhiyu-card-bg: #f7f3e8 !important;   /* 卡片背景（文章底色） */
+      --anzhiyu-fontcolor: #1a1a1a !important; /* 全局字体颜色 */
+      --global-bg: #f7f3e8 !important;         /* 另一种背景变量 */
+      --text-bg-hover: #e3dec6 !important;     /* 选中颜色 */
+      --anzhiyu-light-text: #4a2d0d !important;/* 浅色文字强制变深 */
+      --anzhiyu-second-text: #5c4e36 !important;/* 次级文字 */
+      --anzhiyu-meta-text: #7a6b5d !important; /* 元信息文字 */
+    }
+
+    /* 2. 【背景层级】强制所有可能的容器背景为米黄 */
+    html, body, #body-wrap, #web_bg, #page-header, #footer, #nav, #post, .layout {
       background-color: #f7f3e8 !important;
       background-image: none !important;
+      background: #f7f3e8 !important;
     }
 
-    /* 2. 【容器修复】文章卡片去阴影、去边框，透明化 */
-    #recent-posts > .recent-post-item, 
-    .layout > .recent-post-item,
-    #post {
+    /* 3. 【文章卡片】去黑底、去阴影 */
+    #post, .recent-post-item, .layout > div {
+      background-color: #f7f3e8 !important;
       box-shadow: none !important;
       border: none !important;
-      border-bottom: 1px solid #dcd3b2 !important;
-      background: transparent !important;
-      padding: 10px !important;
     }
 
-    /* 3. 【正文颜色】强制所有正文段落文字为深褐色，解决看不清的问题 */
-    body, p, li, span, div {
-       color: #2b2b2b; /* 兜底颜色 */
-    }
-    
-    /* 专门针对文章内容的文字颜色 */
-    #article-container,
-    #article-container p,
+    /* 4. 【正文文字】强制纯黑/深褐 */
+    #article-container, 
+    #article-container p, 
     #article-container li,
     #article-container span,
-    #article-container div {
-       color: #1a1a1a !important; /* 接近纯黑的深色 */
+    .post-content {
+      color: #000000 !important; /* 强制纯黑，确保对比度 */
+      text-shadow: none !important;
+    }
+    
+    /* 标题颜色 */
+    h1, h2, h3, h4, h5, h6, .post-title {
+       color: #2b1b08 !important;
        text-shadow: none !important;
     }
 
-    /* 4. 【标题颜色】手机端标题强制深色 */
-    h1, h2, h3, h4, h5, h6, .post-title {
-      color: #4a2d0d !important;
-      text-shadow: none !important;
-      font-weight: bold !important;
-    }
-
-    /* 5. 隐藏多余干扰元素 */
-    #rightside, .post-copyright, .new-meta-box {
-       display: none !important;
-    }
-    
-    /* 6. 导航栏修复 */
-    #nav a, #nav .site-name { color: #5c4e36 !important; text-shadow: none !important; }
-    #nav .menus_items .menus_item .menus_item_child { background-color: #f7f3e8 !important; }
+    /* 5. 隐藏干扰元素 */
+    #rightside { display: none !important; } /* 隐藏右下角按钮，防止误触切换深色模式 */
+    #post-comment { background: #f7f3e8 !important; } /* 评论区背景 */
   }
 </style>
 <meta name="generator" content="Hexo 8.1.1"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://npm.elemecdn.com/anzhiyu-blog-static@1.0.4/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
@@ -283,7 +279,26 @@ if (true) {
         民间奇门法术实战应用
       </a>
     </div>
-    </div><div class="category-bar-next" id="category-bar-next" onclick="anzhiyu.scrollCategoryBarToRight()"><i class="anzhiyufont anzhiyu-icon-angle-double-right"></i></div><a class="catalog-more" href="/categories/">更多</a></div></div></div><div class="recent-post-item lastestpost-item" onclick="pjax.loadUrl('/2025/12/10/%E4%B9%B0%E6%88%BF%E9%80%89%E6%A5%BC%E5%B1%82%20%20%E6%90%AC%E5%AE%B6%E6%8B%A9%E6%97%A5/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E4%B9%B0%E6%88%BF%E9%80%89%E6%A5%BC%E5%B1%82%20%20%E6%90%AC%E5%AE%B6%E6%8B%A9%E6%97%A5/" title="买房选楼层  搬家择日">未读</a></div><a class="article-title" href="/2025/12/10/%E4%B9%B0%E6%88%BF%E9%80%89%E6%A5%BC%E5%B1%82%20%20%E6%90%AC%E5%AE%B6%E6%8B%A9%E6%97%A5/" title="买房选楼层  搬家择日">买房选楼层  搬家择日</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.593Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">五行，水一，火二，木三，金四，土五
+    </div><div class="category-bar-next" id="category-bar-next" onclick="anzhiyu.scrollCategoryBarToRight()"><i class="anzhiyufont anzhiyu-icon-angle-double-right"></i></div><a class="catalog-more" href="/categories/">更多</a></div></div></div><div class="recent-post-item lastestpost-item" onclick="pjax.loadUrl('/2025/12/10/%E5%85%B3%E4%BA%8E%E5%88%9D%E4%B8%80%E5%8D%81%E4%BA%94%EF%BC%8C%E4%B8%8A%E9%A6%99/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%85%B3%E4%BA%8E%E5%88%9D%E4%B8%80%E5%8D%81%E4%BA%94%EF%BC%8C%E4%B8%8A%E9%A6%99/" title="关于初一十五，上香">未读</a></div><a class="article-title" href="/2025/12/10/%E5%85%B3%E4%BA%8E%E5%88%9D%E4%B8%80%E5%8D%81%E4%BA%94%EF%BC%8C%E4%B8%8A%E9%A6%99/" title="关于初一十五，上香">关于初一十五，上香</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.594Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">@紫鸢真人 师傅，10月15要祭祀吗？
+我家一般是 初一十五，上香
+买三样水果
+元宝可以烧也可以不烧
+要供灯吗？
+住的这里是每天起来，三支清香
+根据自己意愿
+网上批发酥油灯不贵，批发几箱，觉得有所求的时候，就供灯
+供三盏
+</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8C%96%E8%A7%A3%E5%8D%83%E4%B8%87%E9%A1%B9%E7%9B%AE/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%8D%83%E4%B8%87%E9%A1%B9%E7%9B%AE/" title="化解千万项目">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%8D%83%E4%B8%87%E9%A1%B9%E7%9B%AE/" title="化解千万项目">化解千万项目</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.595Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">
+
+今天上午化解的
+已经等了大半年了
+突然来消息
+那可是北京上千万的项目
+前段时间出现国企竞争
+现在文件递上去了，差不多就成了
+因为当地领导参与其中
+这一调理，就算定了
+</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E4%B9%B0%E6%88%BF%E9%80%89%E6%A5%BC%E5%B1%82%20%20%E6%90%AC%E5%AE%B6%E6%8B%A9%E6%97%A5/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E4%B9%B0%E6%88%BF%E9%80%89%E6%A5%BC%E5%B1%82%20%20%E6%90%AC%E5%AE%B6%E6%8B%A9%E6%97%A5/" title="买房选楼层  搬家择日">未读</a></div><a class="article-title" href="/2025/12/10/%E4%B9%B0%E6%88%BF%E9%80%89%E6%A5%BC%E5%B1%82%20%20%E6%90%AC%E5%AE%B6%E6%8B%A9%E6%97%A5/" title="买房选楼层  搬家择日">买房选楼层  搬家择日</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.593Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">五行，水一，火二，木三，金四，土五
 一六同宗，二七同道，三八为朋，四九为友，五十同途
 买楼买几层
 就是看这个五行，跟自己的六十花甲子纳音，要相生相合
@@ -316,20 +331,7 @@ if (true) {
 残疾人的活，常人好手好脚，有眼睛，可以去干其他的赚钱，养家糊口
 并且以前瞎子，不识字，全凭记忆
 一般瞎子算命，要记住120年的干支
-不过，很简单，就是120 ...</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E4%BA%94%E8%A1%8C%E5%B0%B1%E6%98%AF%E7%BB%83%E4%B8%93%E6%B3%A8%E5%8A%9B%E7%9A%84/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E4%BA%94%E8%A1%8C%E5%B0%B1%E6%98%AF%E7%BB%83%E4%B8%93%E6%B3%A8%E5%8A%9B%E7%9A%84/" title="五行就是练专注力的">未读</a></div><a class="article-title" href="/2025/12/10/%E4%BA%94%E8%A1%8C%E5%B0%B1%E6%98%AF%E7%BB%83%E4%B8%93%E6%B3%A8%E5%8A%9B%E7%9A%84/" title="五行就是练专注力的">五行就是练专注力的</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.593Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">五行就是练专注力的并且去看每个脏器的佛世界就是超越冥想会产生很多功能不要轻视静定大脑越清净，专注力越强做到的各种超能力也越多孩子做到虚体写字，铅笔，中性笔，各种颜色，怎么来的既然能把虚体颜色搬过来，那么酒，水都能搬过来，其他的物件也能搬过来只是孩子跳不出记忆密码里的枷锁所以，修炼境界很重要
-肉身界，天人界（光明界），慧身界（空明界），法身界（金光界），菩萨，佛界（彩光界）
-法身界，金刚就是在这一界，各种法术，就是这一层修出来的
-基本上每个菩萨，都是从金刚修过来的
-大势至金刚，大势至菩萨
-所以我带的几个孩子，找到天命原神，直接带到法身界，
-现在出现的几种超能力，国际领先
-@wing曦wing 浩宇的眼功，很厉害
-他能看到每一个层次的能量状态
-五行之后，五层自然分化
-每一层能量大小，一眼就看得出来
-所以说，谁练谁不练，勤奋不勤奋，一眼就看得出来
-远程也看的很清楚
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8C%96%E8%A7%A3%E5%9C%9F%E5%9C%B0%E7%A5%9E/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%9C%9F%E5%9C%B0%E7%A5%9E/" title="化解土地神">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%9C%9F%E5%9C%B0%E7%A5%9E/" title="化解土地神">化解土地神</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.595Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">师父昨天帮我化解了土地神，昨晚孩子们过来上课说怎么今天脚底那么热呢[呲牙][呲牙][呲牙]
+不过，很简单，就是120 ...</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8C%96%E8%A7%A3%E5%9C%9F%E5%9C%B0%E7%A5%9E/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%9C%9F%E5%9C%B0%E7%A5%9E/" title="化解土地神">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%9C%9F%E5%9C%B0%E7%A5%9E/" title="化解土地神">化解土地神</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.595Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">师父昨天帮我化解了土地神，昨晚孩子们过来上课说怎么今天脚底那么热呢[呲牙][呲牙][呲牙]
 师父化解后整个屋子能量提升了[强][强][强]，所以孩子们感觉到热
 绝对立竿见影
 提升地运宅子运也就提升上来了
@@ -339,29 +341,39 @@ if (true) {
 也包括这些培训机构的场地
 各方面化解的效果越好孩子的超能力越高
 化解后事半功倍[呲牙]
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8C%96%E8%A7%A3%E5%8D%83%E4%B8%87%E9%A1%B9%E7%9B%AE/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%8D%83%E4%B8%87%E9%A1%B9%E7%9B%AE/" title="化解千万项目">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8C%96%E8%A7%A3%E5%8D%83%E4%B8%87%E9%A1%B9%E7%9B%AE/" title="化解千万项目">化解千万项目</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.595Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">
+</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8D%A0%E5%AF%9F%E5%96%84%E6%81%B6%E4%B8%9A%E6%8A%A5%E7%BB%8F/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8D%A0%E5%AF%9F%E5%96%84%E6%81%B6%E4%B8%9A%E6%8A%A5%E7%BB%8F/" title="占察善恶业报经">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8D%A0%E5%AF%9F%E5%96%84%E6%81%B6%E4%B8%9A%E6%8A%A5%E7%BB%8F/" title="占察善恶业报经">占察善恶业报经</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.596Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content"></div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E3%80%90%E7%8E%84%E9%97%A8%E7%A7%98%E6%9C%AF%E3%80%91%E5%BC%80%E5%85%89%E7%A7%91%E4%BB%AA%E4%B8%8E%E5%92%92%E8%AF%AD%E6%B1%87%E7%BC%96%20%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E3%80%90%E7%8E%84%E9%97%A8%E7%A7%98%E6%9C%AF%E3%80%91%E5%BC%80%E5%85%89%E7%A7%91%E4%BB%AA%E4%B8%8E%E5%92%92%E8%AF%AD%E6%B1%87%E7%BC%96%20%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88/" title="【玄门秘术】开光科仪与咒语汇编 紫鸢真人传授">未读</a></div><a class="article-title" href="/2025/12/10/%E3%80%90%E7%8E%84%E9%97%A8%E7%A7%98%E6%9C%AF%E3%80%91%E5%BC%80%E5%85%89%E7%A7%91%E4%BB%AA%E4%B8%8E%E5%92%92%E8%AF%AD%E6%B1%87%E7%BC%96%20%E7%B4%AB%E9%B8%A2%E7%9C%9F%E4%BA%BA%E4%BC%A0%E6%8E%88/" title="【玄门秘术】开光科仪与咒语汇编 紫鸢真人传授">【玄门秘术】开光科仪与咒语汇编 紫鸢真人传授</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.590Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">【玄门秘术】开光科仪与咒语汇编 紫鸢真人传授
+卷首：行业须知与心法【开光之义】百姓请购佩件、金佛、玉佛、玉观音、生肖、手链镯子，乃至还童子、还替身，皆需开光。开光加持后，物件方带灵光，起护身催运之效。此乃专业弟子必须掌握之技术，是行业饭碗。
+【润金规矩】开光虽可言不收费，但通常主家会包红包。
 
-今天上午化解的
-已经等了大半年了
-突然来消息
-那可是北京上千万的项目
-前段时间出现国企竞争
-现在文件递上去了，差不多就成了
-因为当地领导参与其中
-这一调理，就算定了
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%85%B3%E4%BA%8E%E5%88%9D%E4%B8%80%E5%8D%81%E4%BA%94%EF%BC%8C%E4%B8%8A%E9%A6%99/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%85%B3%E4%BA%8E%E5%88%9D%E4%B8%80%E5%8D%81%E4%BA%94%EF%BC%8C%E4%B8%8A%E9%A6%99/" title="关于初一十五，上香">未读</a></div><a class="article-title" href="/2025/12/10/%E5%85%B3%E4%BA%8E%E5%88%9D%E4%B8%80%E5%8D%81%E4%BA%94%EF%BC%8C%E4%B8%8A%E9%A6%99/" title="关于初一十五，上香">关于初一十五，上香</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.594Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">@紫鸢真人 师傅，10月15要祭祀吗？
-我家一般是 初一十五，上香
-买三样水果
-元宝可以烧也可以不烧
-要供灯吗？
-住的这里是每天起来，三支清香
-根据自己意愿
-网上批发酥油灯不贵，批发几箱，觉得有所求的时候，就供灯
-供三盏
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8D%A0%E5%AF%9F%E5%96%84%E6%81%B6%E4%B8%9A%E6%8A%A5%E7%BB%8F/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8D%A0%E5%AF%9F%E5%96%84%E6%81%B6%E4%B8%9A%E6%8A%A5%E7%BB%8F/" title="占察善恶业报经">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8D%A0%E5%AF%9F%E5%96%84%E6%81%B6%E4%B8%9A%E6%8A%A5%E7%BB%8F/" title="占察善恶业报经">占察善恶业报经</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.596Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content"></div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%95%86%E5%93%81%E6%88%BF%E9%87%8C%E9%9D%A2%E4%BE%9B%E4%BD%9B/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%95%86%E5%93%81%E6%88%BF%E9%87%8C%E9%9D%A2%E4%BE%9B%E4%BD%9B/" title="商品房里面供佛">未读</a></div><a class="article-title" href="/2025/12/10/%E5%95%86%E5%93%81%E6%88%BF%E9%87%8C%E9%9D%A2%E4%BE%9B%E4%BD%9B/" title="商品房里面供佛">商品房里面供佛</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.597Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">
+一般物件&#x2F;手链：随缘。
+常人财神&#x2F;观音像（耗时约两小时）：懂行者一般包二百红包。
+掌握专用咒语与科仪，显专业功底，亦是对神明的恭敬。
 
-祖先牌位不能跟神佛放在一起
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/" title="厕所布置在哪里比较好">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/" title="厕所布置在哪里比较好">厕所布置在哪里比较好</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.596Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">真人老师请教一下，厨房和厕所布置在哪个方位合适[抱拳]
+【心法总诀】开光心法在于清理负磁场，加持正能量。心中需观想白光或金光，将物件“观亮”。
+
+给自己开：福主念自己名字。
+给他人开：福主念对方名字。
+
+
+第一章：通用开光程序与准备【法坛准备】
+
+供品：摆上水果、酒水。
+法器：
+香（点燃三支）。
+缝衣针一根（常用1号针，师父平时置于笔中）。
+掷杯（视情况使用）。
+
+
+
+【通用起势】凡开光，初到香坛前，必先诚心诵读净坛赞：
+
+初到香坛前，焚香祝圣贤。闻音到此处，净口用真言。
+
+【通用操作手法（三遍法）】
+
+针开：右手持针，念咒时“念到哪里，指到哪里”。
+香开：手持燃香，悬空虚画，再开一遍。
+合开：针 ...</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/" title="厕所布置在哪里比较好">未读</a></div><a class="article-title" href="/2025/12/10/%E5%8E%95%E6%89%80%E5%B8%83%E7%BD%AE%E5%9C%A8%E5%93%AA%E9%87%8C%E6%AF%94%E8%BE%83%E5%A5%BD/" title="厕所布置在哪里比较好">厕所布置在哪里比较好</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.596Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">真人老师请教一下，厨房和厕所布置在哪个方位合适[抱拳]
 1.2.6.8.9吉
 3.4.5.7
 凶，布厕所
@@ -369,7 +381,22 @@ if (true) {
 2旺财
 6旺官
 8.9富贵
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%9C%A8%E6%8A%A4%E5%8D%AB%E5%85%89%E7%90%83%E9%87%8C%E9%9D%A2%E4%BF%AE%E7%82%BC%E6%98%AF%E8%BF%9B%E5%85%A5%E9%AB%98%E7%BB%B4%EF%BC%8C%E5%85%89%E6%98%8E%E7%95%8C%EF%BC%8C%E6%AF%94%E9%BE%99%E8%84%89%E8%BF%98%E8%A6%81%E5%A5%BD/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%9C%A8%E6%8A%A4%E5%8D%AB%E5%85%89%E7%90%83%E9%87%8C%E9%9D%A2%E4%BF%AE%E7%82%BC%E6%98%AF%E8%BF%9B%E5%85%A5%E9%AB%98%E7%BB%B4%EF%BC%8C%E5%85%89%E6%98%8E%E7%95%8C%EF%BC%8C%E6%AF%94%E9%BE%99%E8%84%89%E8%BF%98%E8%A6%81%E5%A5%BD/" title="在护卫光球里面修炼是进入高维，光明界，比龙脉还要好">未读</a></div><a class="article-title" href="/2025/12/10/%E5%9C%A8%E6%8A%A4%E5%8D%AB%E5%85%89%E7%90%83%E9%87%8C%E9%9D%A2%E4%BF%AE%E7%82%BC%E6%98%AF%E8%BF%9B%E5%85%A5%E9%AB%98%E7%BB%B4%EF%BC%8C%E5%85%89%E6%98%8E%E7%95%8C%EF%BC%8C%E6%AF%94%E9%BE%99%E8%84%89%E8%BF%98%E8%A6%81%E5%A5%BD/" title="在护卫光球里面修炼是进入高维，光明界，比龙脉还要好">在护卫光球里面修炼是进入高维，光明界，比龙脉还要好</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.713Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">修炼，在护卫球里，在哪里都是演法场
+</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%9B%9B%E7%A5%9E%E5%B0%86%E6%8A%A4%E8%BA%AB%20%E5%A4%9C%E8%A1%8C%E5%AE%B3%E6%80%95%E5%BF%B5%E5%92%92/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%9B%9B%E7%A5%9E%E5%B0%86%E6%8A%A4%E8%BA%AB%20%E5%A4%9C%E8%A1%8C%E5%AE%B3%E6%80%95%E5%BF%B5%E5%92%92/" title="四神将护身 夜行害怕念咒">未读</a></div><a class="article-title" href="/2025/12/10/%E5%9B%9B%E7%A5%9E%E5%B0%86%E6%8A%A4%E8%BA%AB%20%E5%A4%9C%E8%A1%8C%E5%AE%B3%E6%80%95%E5%BF%B5%E5%92%92/" title="四神将护身 夜行害怕念咒">四神将护身 夜行害怕念咒</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.711Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">
+咒，青龙居我左，拇指点食指中节
+白虎是侍我右拇指点无名指中间
+朱雀护我前拇指点中指顶节
+玄武立我后拇指点中指底节
+四方四神将拇指点中指中节
+将我元神护拇指点无名指指根
+吾奉太上老君急急如律令
+边念咒边点念到急急如律令后，四指迅速握住大拇指即可，此法随时可以用作护身
+
+念咒的同时观想四神兽
+掐 左右手都可以
+夜行害怕念咒 ，阿弥陀佛大如天，八大金刚站两边，前后都有金刚护，哪有恶鬼敢傍边，吾奉太上老君急急如律令
+</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%9B%9B%E5%8D%81%E4%BA%8C%E7%A7%8D%E8%B6%85%E8%83%BD%E5%8A%9B%20%E5%AF%BC%E5%BC%95%E8%AF%8D/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%9B%9B%E5%8D%81%E4%BA%8C%E7%A7%8D%E8%B6%85%E8%83%BD%E5%8A%9B%20%E5%AF%BC%E5%BC%95%E8%AF%8D/" title="四十二种超能力 导引词">未读</a></div><a class="article-title" href="/2025/12/10/%E5%9B%9B%E5%8D%81%E4%BA%8C%E7%A7%8D%E8%B6%85%E8%83%BD%E5%8A%9B%20%E5%AF%BC%E5%BC%95%E8%AF%8D/" title="四十二种超能力 导引词">四十二种超能力 导引词</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.598Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">@南宁智慧象教育 你写一个穿越空间的
+就是，静坐看空间，跟空间交流，空间让过，就出现一个空洞，走过去就行。
+好的，请放松下来，我将引导你进入一次内在空间的探索之旅。这份导引词是为初学者设计的，语言会非常简单、直接，请不要有任何压力，只需跟随我的声音，允许一切自然发生。内在空间探索：初学者冥想导引【准备阶段】你好，欢迎来到这里。首先，请为自己找一个绝对不会被打扰的空间，将手机调至静音。你可以选择一个舒适的姿势坐着，腰背挺直，但不要僵硬。也可以选择躺下，让自己完全放松。无论哪种姿势，都以身体的舒适为第一原则。准备好了，就可以慢慢地、温柔地，闭上你的眼睛。【第一部分：进入宁静 (入静)】现在，让我们从呼吸开始。请做一次深长的呼吸，用鼻子深深地吸气…… 感受空气充满你的胸腔和腹部…… 然后，用嘴巴缓缓地、彻底地呼出…… 就好像要把身体里所有的紧张和疲惫，都一起呼出去。再来一次，深深地吸气…… 这一次，想象你吸入的是宇宙间最纯净、最安宁的能量。缓缓地呼气…… 呼出所有的杂念和担忧。保持这样舒适自然的呼吸，不需要刻意控制。现在，请将你的注意力，轻轻地放在你的身体上。感受你的双脚，它们放松了吗？让脚 ...</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%9C%A8%E6%8A%A4%E5%8D%AB%E5%85%89%E7%90%83%E9%87%8C%E9%9D%A2%E4%BF%AE%E7%82%BC%E6%98%AF%E8%BF%9B%E5%85%A5%E9%AB%98%E7%BB%B4%EF%BC%8C%E5%85%89%E6%98%8E%E7%95%8C%EF%BC%8C%E6%AF%94%E9%BE%99%E8%84%89%E8%BF%98%E8%A6%81%E5%A5%BD/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%9C%A8%E6%8A%A4%E5%8D%AB%E5%85%89%E7%90%83%E9%87%8C%E9%9D%A2%E4%BF%AE%E7%82%BC%E6%98%AF%E8%BF%9B%E5%85%A5%E9%AB%98%E7%BB%B4%EF%BC%8C%E5%85%89%E6%98%8E%E7%95%8C%EF%BC%8C%E6%AF%94%E9%BE%99%E8%84%89%E8%BF%98%E8%A6%81%E5%A5%BD/" title="在护卫光球里面修炼是进入高维，光明界，比龙脉还要好">未读</a></div><a class="article-title" href="/2025/12/10/%E5%9C%A8%E6%8A%A4%E5%8D%AB%E5%85%89%E7%90%83%E9%87%8C%E9%9D%A2%E4%BF%AE%E7%82%BC%E6%98%AF%E8%BF%9B%E5%85%A5%E9%AB%98%E7%BB%B4%EF%BC%8C%E5%85%89%E6%98%8E%E7%95%8C%EF%BC%8C%E6%AF%94%E9%BE%99%E8%84%89%E8%BF%98%E8%A6%81%E5%A5%BD/" title="在护卫光球里面修炼是进入高维，光明界，比龙脉还要好">在护卫光球里面修炼是进入高维，光明界，比龙脉还要好</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.713Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">修炼，在护卫球里，在哪里都是演法场
 风水好气场好的，肯定更好
 都跑到钟南山去修炼，就是因为那里是龙脉
 但进入光球，是进入高维，光明界，比龙脉还要好
@@ -381,15 +408,6 @@ if (true) {
 这光里，有时，有运，有财
 没烦恼，没世事干扰
 举一反三，可以观想家人身上有护卫光球就可以提升家人运势
-</div></div></div><div class="recent-post-item" onclick="pjax.loadUrl('/2025/12/10/%E5%A4%B1%E7%9C%A0%E7%9A%84%E7%A5%9D%E7%94%B1%E8%B0%83%E7%90%86%E6%96%B9%E6%B3%95/')"><div class="recent-post-info no-cover"><div class="recent-post-info-top"><div class="recent-post-info-top-tips"><div class="article-categories-original">民间奇门法术实战应用</div><a class="unvisited-post" href="/2025/12/10/%E5%A4%B1%E7%9C%A0%E7%9A%84%E7%A5%9D%E7%94%B1%E8%B0%83%E7%90%86%E6%96%B9%E6%B3%95/" title="失眠的祝由调理方法">未读</a></div><a class="article-title" href="/2025/12/10/%E5%A4%B1%E7%9C%A0%E7%9A%84%E7%A5%9D%E7%94%B1%E8%B0%83%E7%90%86%E6%96%B9%E6%B3%95/" title="失眠的祝由调理方法">失眠的祝由调理方法</a></div><div class="article-meta-wrap"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days" style="font-size: 15px; display:none"></i><span class="article-meta-label">发表于</span><time datetime="2025-12-10T12:02:59.000Z" title="发表于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time><time class="time_hidden" datetime="2025-12-10T12:02:59.754Z" title="更新于 2025-12-10 20:02:59" time="2025-12-10 20:02:59">2025-12-10</time></span></div><div class="content">睡前念
-右手剑指往左手心写，夜猫子
-写三遍到七遍
-然后左手心放在额头
-右手剑指放在胸前
-念咒语
-日落西山神入心房，血气和通病无自生，丹元心神，守卫黄房，一觉睡到神清气爽，吾奉太上老君急急如律令
-不停的念
-
 </div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/#content-inner"><i class="anzhiyufont anzhiyu-icon-chevron-left fa-fw" style="font-weight: inherit; font-size: 1rem;"></i><div class="pagination_tips_prev">上页</div></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#content-inner">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/4/#content-inner"><div class="pagination_tips_next">下页</div><i style="font-weight: inherit; font-size: 1rem;" class="anzhiyufont anzhiyu-icon-chevron-right fa-fw"></i></a><div class="toPageGroup"><input id="toPageText" oninput="value=value.replace(/[^0-9]/g,'')" maxlength="3" onkeyup="this.value=this.value.replace(/[^u4e00-u9fa5w]/g,'')" aria-label="toPage"><a id="toPageButton" onclick="anzhiyu.toPage()"><i class="anzhiyufont anzhiyu-icon-angles-right" style="font-weight: inherit; font-size: 1rem;"></i></a></div></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/04/27/64496e511b09c.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/08/24/64e6ce9c507bb.png" alt="status"/></div></div><div class="author-info__description">专注正统传承，探索天地奥秘。分享奇门、风水、法术修炼心得。</div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">诸位道友，欢迎光临本站。修行不易，且行且珍惜。</div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://bu.dusays.com/2023/05/13/645fa415e8694.png) center center / 100% no-repeat"></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="anzhiyufont anzhiyu-icon-folder-open"></i>
             <span>分类</span>
@@ -397,7 +415,7 @@ if (true) {
             </div>
             <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B0%91%E9%97%B4%E5%A5%87%E9%97%A8%E6%B3%95%E6%9C%AF%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8/"><span class="card-category-list-name">民间奇门法术实战应用</span><span class="card-category-list-count">37</span></a></li>
-            </ul></div><div class="sticky_layout"><div class="card-widget"><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/12/"><span class="card-archive-list-date">2025年12月</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">37</span><span>篇</span></div></a></li></ul></div><hr/><div class="card-webinfo"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-file-lines"></i><div class="item-name">文章总数 :</div></div><div class="item-count">37</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-stopwatch"></i><div class="item-name">建站天数 :</div></div><div class="item-count" id="runtimeshow" data-publishDate="2023-12-31T16:00:00.000Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-font"></i><div class="item-name">全站字数 :</div></div><div class="item-count">368.9k</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-hourglass-start"></i><div class="item-name">最后更新 :</div></div><div class="item-count" id="last-push-date" data-lastPushDate="2025-12-10T13:33:44.689Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="闭关修炼中，请勿打扰~" title="闭关修炼中，请勿打扰~"/><div id="runtimeTextTip"></div></div><div class="footer_custom_text">人法地，地法天，天法道，道法自然。</div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2025 By <a class="footer-bar-link" href="/" title="查无此子" target="_blank">查无此子</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
+            </ul></div><div class="sticky_layout"><div class="card-widget"><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/12/"><span class="card-archive-list-date">2025年12月</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">37</span><span>篇</span></div></a></li></ul></div><hr/><div class="card-webinfo"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-file-lines"></i><div class="item-name">文章总数 :</div></div><div class="item-count">37</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-stopwatch"></i><div class="item-name">建站天数 :</div></div><div class="item-count" id="runtimeshow" data-publishDate="2023-12-31T16:00:00.000Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-font"></i><div class="item-name">全站字数 :</div></div><div class="item-count">368.9k</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-hourglass-start"></i><div class="item-name">最后更新 :</div></div><div class="item-count" id="last-push-date" data-lastPushDate="2025-12-10T13:38:21.499Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="闭关修炼中，请勿打扰~" title="闭关修炼中，请勿打扰~"/><div id="runtimeTextTip"></div></div><div class="footer_custom_text">人法地，地法天，天法道，道法自然。</div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2025 By <a class="footer-bar-link" href="/" title="查无此子" target="_blank">查无此子</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
   if (true) { 
     window.typed = new Typed("#footer-type-tips", {
       strings: ["万物负阴而抱阳，冲气以为和。","天地不仁，以万物为刍狗。","祸兮福之所倚，福兮祸之所伏。"],
