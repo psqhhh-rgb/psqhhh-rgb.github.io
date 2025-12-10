@@ -190,15 +190,47 @@
       }
       detectApple()
     })(window)</script><style>
+  /* 全局字体设置：优先宋体/楷体 */
   :root { --anzhiyu-font-family: "KaiTi", "STKaiti", "Baskerville", "Georgia", "FangSong", serif !important; } 
-  .article-title, .site-name, .post-title { font-weight: bold; }
   
-  /* 手机端样式优化 */
+  /* =========================================
+     【核心修复】电脑版 & 手机版 标题通用增强 
+     ========================================= */
+  
+  /* 针对文章大标题、网站名称：使用“深檀木色 + 浅色描边” */
+  #post-info .post-title,
+  #page-header #site-title,
+  #page-header .site-name {
+    color: #2b1b08 !important; /* 极深的檀木色，接近黑色但偏暖 */
+    text-shadow: 
+      2px 2px 0px rgba(247, 243, 232, 0.8), /* 右下浅色投影 */
+      -1px -1px 0px rgba(247, 243, 232, 0.8), /* 左上浅色投影 */
+      0 0 15px rgba(255, 255, 255, 0.9) !important; /* 强力白色背光晕 */
+    font-weight: 900 !important; /* 最粗字体 */
+    letter-spacing: 2px; /* 增加字间距，更有气势 */
+  }
+
+  /* 针对文章副标题信息（日期、字数等）：加深颜色 */
+  #post-info .post-meta,
+  #post-info .post-meta .post-meta-label,
+  #post-info .post-meta time,
+  #post-info .post-meta a,
+  #post-info .post-meta i {
+     color: #4a2d0d !important; /* 深褐色 */
+     text-shadow: 0 0 5px rgba(255,255,255, 0.8) !important; /* 白色光晕防背景干扰 */
+  }
+
+  /* =========================================
+     手机端专属样式优化 (max-width: 768px)
+     ========================================= */
   @media screen and (max-width: 768px) {
+    /* 强制背景为米黄色 */
     body, #body-wrap, #page-header, .layout {
-      background: #f7f3e8 !important; /* 米黄色背景 */
+      background: #f7f3e8 !important; 
       background-image: none !important;
     }
+
+    /* 文章卡片去阴影，仿古书页 */
     #recent-posts > .recent-post-item, 
     .layout > .recent-post-item,
     .layout > div.post-content {
@@ -208,25 +240,34 @@
       padding: 1rem 0.5rem !important;
       border-radius: 0 !important;
     }
+
+    /* 全局正文颜色 */
     body {
       font-family: "PingFang SC", "Hiragino Sans GB", "Source Han Serif CN", "Songti SC", serif !important;
       font-size: 17px !important;
       line-height: 1.8 !important;
       color: #2b2b2b !important;
     }
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 700 !important;
-      color: #4a2d0d !important;
+
+    /* 首页卡片标题颜色修正 */
+    .recent-post-item .article-title,
+    .recent-post-item .article-title a {
+       color: #4a2d0d !important;
+       text-shadow: none !important;
     }
+
+    /* 界面简化 */
     #rightside, .post-copyright, .new-meta-box, #footer-wrap {
        backdrop-filter: none !important;
        background: transparent !important;
     }
+    
     #nav {
       background: #f7f3e8 !important;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
     }
     #nav a { color: #5c4e36 !important; }
+    #nav .site-name { color: #4a2d0d !important; }
   }
 </style>
 <meta name="generator" content="Hexo 8.1.1"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://npm.elemecdn.com/anzhiyu-blog-static@1.0.4/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
@@ -250,7 +291,7 @@ if (true) {
             </div>
             <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B0%91%E9%97%B4%E5%A5%87%E9%97%A8%E6%B3%95%E6%9C%AF%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8/"><span class="card-category-list-name">民间奇门法术实战应用</span><span class="card-category-list-count">37</span></a></li>
-            </ul></div><div class="sticky_layout"><div class="card-widget"><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/12/"><span class="card-archive-list-date">2025年12月</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">37</span><span>篇</span></div></a></li></ul></div><hr/><div class="card-webinfo"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-file-lines"></i><div class="item-name">文章总数 :</div></div><div class="item-count">37</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-stopwatch"></i><div class="item-name">建站天数 :</div></div><div class="item-count" id="runtimeshow" data-publishDate="2023-12-31T16:00:00.000Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-font"></i><div class="item-name">全站字数 :</div></div><div class="item-count">368.9k</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-hourglass-start"></i><div class="item-name">最后更新 :</div></div><div class="item-count" id="last-push-date" data-lastPushDate="2025-12-10T13:06:57.672Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="闭关修炼中，请勿打扰~" title="闭关修炼中，请勿打扰~"/><div id="runtimeTextTip"></div></div><div class="footer_custom_text">人法地，地法天，天法道，道法自然。</div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2025 By <a class="footer-bar-link" href="/" title="查无此子" target="_blank">查无此子</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
+            </ul></div><div class="sticky_layout"><div class="card-widget"><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/12/"><span class="card-archive-list-date">2025年12月</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">37</span><span>篇</span></div></a></li></ul></div><hr/><div class="card-webinfo"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-file-lines"></i><div class="item-name">文章总数 :</div></div><div class="item-count">37</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-stopwatch"></i><div class="item-name">建站天数 :</div></div><div class="item-count" id="runtimeshow" data-publishDate="2023-12-31T16:00:00.000Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-font"></i><div class="item-name">全站字数 :</div></div><div class="item-count">368.9k</div></div><div class="webinfo-item"><div class="webinfo-item-title"><i class="anzhiyufont anzhiyu-icon-hourglass-start"></i><div class="item-name">最后更新 :</div></div><div class="item-count" id="last-push-date" data-lastPushDate="2025-12-10T13:26:30.212Z"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></div></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="闭关修炼中，请勿打扰~" title="闭关修炼中，请勿打扰~"/><div id="runtimeTextTip"></div></div><div class="footer_custom_text">人法地，地法天，天法道，道法自然。</div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2025 By <a class="footer-bar-link" href="/" title="查无此子" target="_blank">查无此子</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
   if (true) { 
     window.typed = new Typed("#footer-type-tips", {
       strings: ["万物负阴而抱阳，冲气以为和。","天地不仁，以万物为刍狗。","祸兮福之所倚，福兮祸之所伏。"],
