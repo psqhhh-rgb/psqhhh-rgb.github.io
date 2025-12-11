@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>心流念界 V18.0 - 永恒传承</title>
+    <style>
+        :root {
+            --primary: #00f2ff;       /* 科技蓝 */
+            --secondary: #bd00ff;     /* 霓虹紫 */
+            --gold: #ffd700;          /* 佛光金 */
+            --gold-glow: rgba(255, 215, 0, 0.6);
+            --bg: #050510;
+            --surface: #121225;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            margin: 0; height: 100vh; background-color: var(--bg);
+            background-image: radial-gradient(circle at center, #1a1a3a 0%, var(--bg) 70%);
+            color: var(--text); font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* --- 🌸 功德莲池层 (背景) --- */
+        #lotusPond {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none; overflow: hidden;
+        }
+        
+        .lotus-wrapper {
+            position: absolute; width: 40px; height: 40px; opacity: 0;
+            animation: lotusBloom 2.5s forwards, lotusFloat 6s infinite ease-in-out;
+            transition: all 0.5s;
+        }
+        
+        .lotus-svg {
+            width: 100%; height: 100%;
+            fill: rgba(255, 215, 0, 0.2); stroke: #ffd700; stroke-width: 1.5;
+            filter: drop-shadow(0 0 5px var(--gold)) drop-shadow(0 0 10px rgba(255,215,0,0.5));
+        }
+
+        @keyframes lotusBloom { 
+            0% { transform: scale(0) translateY(20px); opacity: 0; } 
+            100% { transform: scale(1) translateY(0); opacity: 0.9; } 
+        }
+        @keyframes lotusFloat { 
+            0%, 100% { transform: translateY(0) rotate(0deg); } 
+            50% { transform: translateY(-10px) rotate(5deg); } 
+        }
+
+        /* --- 全屏金光闪烁层 --- */
+        #fullScreenFlash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; opacity: 0; pointer-events: none; z-index: 999;
+            transition: opacity 0.5s;
+        }
+        #fullScreenFlash.active { opacity: 0.8; background: var(--gold); }
+
+        /* HUD */
+        .hud-bar {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px;
+            display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; pointer-events: none; z-index: 10;
+        }
+        .hud-item strong { display: block; color: var(--primary); font-size: 1.1rem; }
+        .hud-item.total strong { color: var(--gold); }
+
+        /* 主舞台 */
+        .main-stage {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; position: relative; z-index: 10;
+        }
+
+        .altar-container { position: relative; width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        
+        .halo {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            border: 2px solid rgba(0, 242, 255, 0.3); animation: breathe 6s infinite ease-in-out;
+            transition: all 0.2s;
+        }
+        .halo.shockwave {
+            border-color: var(--gold);
+            box-shadow: 0 0 80px var(--gold-glow), inset 0 0 30px var(--gold);
+            animation: shockwaveExpand 0.6s ease-out;
+        }
+
+        .totem {
+            width: 150px; height: 150px; background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 50%; position: relative; z-index: 2; transition: transform 0.1s;
+            background-size: cover; background-position: center;
+            border: 2px solid transparent;
+        }
+        .totem:active { transform: scale(0.95); }
+        .totem.pulse-gold { box-shadow: 0 0 30px var(--gold); border-color: rgba(255,215,0,0.8); }
+
+        .mantra-text { margin-top: 30px; font-size: 1.5rem; text-shadow: 0 0 10px var(--primary); text-align: center; }
+        .counter-box { font-size: 3.5rem; font-weight: bold; margin-top: 10px; font-family: sans-serif; color: #fff; }
+
+        .progress-container { width: 80%; max-width: 400px; height: 4px; background: #333; margin-top: 20px; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); width: 0%; transition: width 0.3s; }
+
+        /* 底部控制栏 */
+        .controls { position: fixed; bottom: 30px; display: flex; gap: 15px; z-index: 50; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            background: rgba(18, 18, 37, 0.9); border: 1px solid #444; color: var(--text);
+            padding: 12px 20px; border-radius: 30px; cursor: pointer; font-size: 0.9rem;
+            transition: 0.3s; display: flex; align-items: center; gap: 6px; justify-content: center;
+        }
+        .btn:hover, .btn.active { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+
+        /* 自动面板 */
+        .floating-panel {
+            position: fixed; bottom: 90px; background: rgba(18, 18, 37, 0.98);
+            border: 1px solid var(--secondary); border-radius: 16px; padding: 20px;
+            display: none; flex-direction: column; gap: 15px; width: 320px; max-width: 90%;
+            backdrop-filter: blur(12px); box-shadow: 0 0 40px rgba(0,0,0,0.6); z-index: 60;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        /* 设置弹窗 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px); }
+        .modal-content { 
+            background: var(--surface); padding: 25px; border-radius: 16px; 
+            border: 1px solid var(--secondary); width: 85%; max-width: 360px; color: #fff; 
+            max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column;
+        }
+        
+        .section-title { font-size: 0.85rem; color: var(--primary); border-bottom: 1px solid #333; padding-bottom: 5px; margin-top: 15px; margin-bottom: 10px; }
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display:block; font-size: 0.75rem; color: #888; margin-bottom: 4px; }
+        input[type=text], input[type=number] { 
+            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
+            padding: 10px; border-radius: 6px; outline: none; font-size: 1rem;
+        }
+        input:focus { border-color: var(--primary); }
+
+        /* IO 文本域 */
+        textarea.io-box {
+            width: 100%; height: 80px; background: #080810; border: 1px solid #444; 
+            color: var(--success); font-family: monospace; font-size: 0.7rem; padding: 8px;
+            border-radius: 6px; resize: none; word-break: break-all;
+        }
+
+        .btn-small { padding: 6px 12px; font-size: 0.75rem; border-radius: 4px; border: 1px solid #444; background: #222; color: #aaa; cursor: pointer; }
+        .btn-danger { border-color: #522; color: #f55; background: #211; }
+        .btn-success { border-color: #053; color: #0f8; background: #021; }
+
+        @keyframes breathe { 0%,100%{transform:scale(1);opacity:0.4} 50%{transform:scale(1.05);opacity:0.7} }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shockwaveExpand { 0% { transform: scale(1); opacity: 0.8; border-width: 4px; } 100% { transform: scale(2.5); opacity: 0; border-width: 0px; } }
+        
+        .float-text {
+            position: absolute; color: var(--gold); font-weight: bold; font-family: sans-serif;
+            pointer-events: none; animation: floatUpGold 1s ease-out forwards;
+            font-size: 1.2rem; text-shadow: 0 0 5px #000; z-index: 20;
+        }
+        @keyframes floatUpGold { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } }
+
+        input[type=range] { width: 100%; background: transparent; -webkit-appearance: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #333; border-radius: 2px; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--primary); margin-top: -6px; }
+
+    </style>
+</head>
+<body>
+
+    <div id="lotusPond"></div>
+    <div id="fullScreenFlash"></div>
+
+    <div class="hud-bar">
+        <div class="hud-item"><strong id="dateDisplay">--.--</strong><span>TODAY</span></div>
+        <div class="hud-item total"><strong id="totalDisplay">0</strong><span>TOTAL</span></div>
+    </div>
+
+    <div class="main-stage">
+        <div class="altar-container" id="altar">
+            <div class="halo" id="halo"></div>
+            <div class="totem" id="totem"></div>
+        </div>
+        <h1 class="mantra-text" id="mantraText">南无飒哆喃   三藐三菩陀  俱胝喃  怛侄他  唵  折隶主隶  准提 娑哈。唵  部林。</h1>
+        
+        <div class="counter-box" id="todayCountDisplay">0</div>
+        
+        <div class="progress-container"><div class="progress-fill" id="progressFill"></div></div>
+        <div style="font-size:0.75rem; color:#555; margin-top:5px;">
+            今日目标: <span id="targetDisplay">108</span> | 总愿力: <span id="totalTargetDisplay">∞</span>
+        </div>
+    </div>
+
+    <!-- 自动面板 -->
+    <div class="floating-panel" id="autoPanel">
+        <div style="color:#aaa; border-bottom:1px solid #333; padding-bottom:10px;">自动转经</div>
+        <div style="display:flex; justify-content:space-between; margin-top:10px; color:#888; font-size:0.8rem;">
+            <span>间隔</span><span id="speedVal" style="color:var(--primary)">5.0s</span>
+        </div>
+        <input type="range" id="speedRange" min="0.5" max="300" step="0.5" value="5.0">
+        <div style="margin-top:15px; border-top:1px solid #333; padding-top:15px;">
+             <button class="btn" style="width:100%; font-size:0.8rem;" id="btnRecDuration" 
+                onmousedown="startDurationRecord()" onmouseup="stopDurationRecord()"
+                ontouchstart="startDurationRecord()" ontouchend="stopDurationRecord()">
+                ⏱ 按住念一遍 (自动设时长)
+             </button>
+        </div>
+        <button class="btn" style="margin-top:15px; width:100%; border-color:var(--primary);" onclick="toggleAutoTimer()">
+            <span id="autoBtnText">▶ 启动自动</span>
+        </button>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="openSettings()">⚙ 设置/备份</button>
+        <button class="btn" id="btnAutoToggle" onclick="togglePanel('auto')">∞ 自动</button>
+        <button class="btn" onclick="toggleSound()" id="soundBtn">🔊</button>
+    </div>
+
+    <!-- 设置弹窗 -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div style="font-size:1.1rem; font-weight:bold; margin-bottom:15px; text-align:center;">修持设置</div>
+            
+            <div class="section-title">基础设定</div>
+            <div class="input-group">
+                <label>咒语文本</label>
+                <input type="text" id="inputMantra">
+            </div>
+            <div class="input-group">
+                <label>每日目标 / 莲花速率</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="inputTarget" placeholder="日目标">
+                    <input type="number" id="inputLotusRate" placeholder="莲花间隔">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>总愿力目标</label>
+                <input type="number" id="inputTotalTarget">
+            </div>
+            <div class="input-group">
+                <label>观想图 URL</label>
+                <input type="text" id="inputImg">
+            </div>
+
+            <div class="section-title">数据管理</div>
+            <div class="input-group">
+                <label>补录今日功德</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="inputAdd" placeholder="输入数量">
+                    <button class="btn" style="padding:0 20px;" onclick="manualAdd()">添加</button>
+                </div>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                <button class="btn-small btn-danger" onclick="resetTodayData()">清空今日</button>
+                <button class="btn-small btn-danger" onclick="resetTotalData()">重置所有</button>
+            </div>
+
+            <div class="section-title">备份与迁移 (Export/Import)</div>
+            <div class="input-group">
+                <label>存档代码 (复制此处保存，或粘贴此处恢复)</label>
+                <textarea id="ioTextarea" class="io-box" placeholder="点击“导出”生成代码..."></textarea>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-small btn-success" style="flex:1" onclick="exportData()">📤 导出 / 复制</button>
+                <button class="btn-small" style="flex:1; color:#fff; border-color:var(--primary)" onclick="importData()">📥 导入 / 恢复</button>
+            </div>
+
+            <button class="btn" style="width:100%; margin-top:20px; border-color:var(--primary);" onclick="saveSettings()">保存并返回</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 核心状态 ---
+        let state = {
+            todayCount: 0, totalCount: 0, lastDate: "",
+            dailyTarget: 5000, totalTarget: 1000000,
+            mantra: "南无飒哆喃   三藐三菩陀  俱胝喃  怛侄他  唵  折隶主隶  准提 娑哈。唵  部林。", imgUrl: "zhunti.jpeg", soundEnabled: true,
+            // 莲花数据
+            lotusSeeds: [], lotusRate: 1080
+        };
+
+        let autoState = { running: false, timer: null, interval: 2000 };
+        let audioCtx;
+
+        // --- 初始化 ---
+        window.onload = function() {
+            loadState(); 
+            checkDailyReset(); 
+            render(); 
+            initLotusPond(); 
+            
+            document.getElementById('speedRange').addEventListener('input', function() {
+                updateAutoInterval(parseFloat(this.value));
+            });
+            document.body.addEventListener('click', (e) => {
+                if(e.target.closest('.btn') || e.target.closest('.floating-panel') || e.target.closest('.modal') || e.target.closest('.input-group')) return;
+                triggerBeat(e.clientX, e.clientY);
+            });
+            document.addEventListener('keydown', (e) => {
+                if(e.code === 'Space' || e.code === 'Enter') triggerBeat();
+            });
+        };
+
+        // --- 莲花池逻辑 ---
+        function initLotusPond() {
+            const pond = document.getElementById('lotusPond');
+            pond.innerHTML = '';
+            state.lotusSeeds.forEach(seed => createLotusElement(seed));
+        }
+
+        function checkLotusGrowth() {
+            const expectedLotuses = Math.floor(state.totalCount / state.lotusRate);
+            if (expectedLotuses > state.lotusSeeds.length) {
+                const countToAdd = expectedLotuses - state.lotusSeeds.length;
+                for(let i=0; i<countToAdd; i++) plantNewLotus();
+            }
+        }
+
+        function plantNewLotus() {
+            let x, y, safeZone=false, attempts=0;
+            while(!safeZone && attempts < 20) {
+                x = Math.random() * 90 + 5; 
+                y = Math.random() * 90 + 5;
+                if ( (x < 30 || x > 70) || (y < 30 || y > 70) ) safeZone = true;
+                attempts++;
+            }
+            const seed = { x: x, y: y, scale: 0.5 + Math.random() * 0.8, delay: Math.random() * 5 };
+            state.lotusSeeds.push(seed);
+            createLotusElement(seed);
+            createFloatText(null, null, "✨ 功德金莲 +1");
+        }
+
+        function createLotusElement(seed) {
+            const el = document.createElement('div');
+            el.className = 'lotus-wrapper';
+            el.innerHTML = `
+            <svg class="lotus-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 20 C60 40 80 50 50 80 C20 50 40 40 50 20 Z" />
+                <path d="M50 80 C65 65 90 60 90 40 C70 60 55 65 50 80 Z" opacity="0.8"/>
+                <path d="M50 80 C35 65 10 60 10 40 C30 60 45 65 50 80 Z" opacity="0.8"/>
+                <circle cx="50" cy="45" r="3" fill="#fff" filter="blur(1px)"/>
+            </svg>`;
+            el.style.left = seed.x + '%'; el.style.top = seed.y + '%';
+            el.style.width = (40 * seed.scale) + 'px'; el.style.height = (40 * seed.scale) + 'px';
+            el.style.animationDelay = `0s, ${seed.delay}s`; 
+            document.getElementById('lotusPond').appendChild(el);
+        }
+
+        // --- 备份与恢复 (V18 核心) ---
+        function exportData() {
+            const str = JSON.stringify(state);
+            const area = document.getElementById('ioTextarea');
+            area.value = str;
+            area.select();
+            
+            try {
+                document.execCommand('copy');
+                alert("✅ 存档已复制到剪贴板！\n请粘贴到备忘录或发送给手机。");
+            } catch (err) {
+                alert("❌ 复制失败，请手动全选文本框内容复制。");
+            }
+        }
+
+        function importData() {
+            const str = document.getElementById('ioTextarea').value.trim();
+            if (!str) return alert("请先粘贴存档代码！");
+            
+            try {
+                const parsed = JSON.parse(str);
+                // 简单校验
+                if (typeof parsed.totalCount !== 'number' || !Array.isArray(parsed.lotusSeeds)) {
+                    throw new Error("格式不对");
+                }
+                
+                if(confirm("⚠️ 确定覆盖当前进度吗？\n当前数据将丢失，恢复为存档数据。")) {
+                    state = parsed;
+                    saveState();
+                    render();
+                    initLotusPond(); // 关键：重绘莲花
+                    document.getElementById('settingsModal').style.display = 'none';
+                    alert("✨ 恢复成功！");
+                }
+            } catch (e) {
+                alert("❌ 存档格式错误，无法读取。");
+            }
+        }
+
+        // --- 核心逻辑 ---
+        function triggerBeat(x, y, isAuto) {
+            state.todayCount++; state.totalCount++;
+            checkLotusGrowth(); saveState(); render();
+
+            if (!x) {
+                const rect = document.getElementById('altar').getBoundingClientRect();
+                x = rect.left + rect.width / 2; y = rect.top + rect.height / 2;
+            }
+
+            const totem = document.getElementById('totem');
+            totem.classList.remove('pulse-gold'); void totem.offsetWidth; totem.classList.add('pulse-gold');
+            totem.style.transform = "scale(0.92)"; setTimeout(() => { totem.style.transform="scale(1)"; totem.classList.remove('pulse-gold'); }, 150);
+
+            if(!isAuto) createFloatText(x, y);
+
+            if (state.todayCount % 108 === 0) {
+                const halo = document.getElementById('halo');
+                halo.classList.remove('shockwave'); void halo.offsetWidth; halo.classList.add('shockwave');
+                playSound(false);
+            } else { if(state.soundEnabled) playSound(true); }
+
+            if (state.todayCount === parseInt(state.dailyTarget)) triggerFullScreenFlash();
+        }
+
+        function createFloatText(x, y, msg) {
+            const el = document.createElement('div'); el.innerText = msg || "+1"; el.className = 'float-text';
+            if (x === null) { el.style.left="50%"; el.style.top="40%"; el.style.transform="translate(-50%,-50%)"; }
+            else { el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.transform = `translateX(${(Math.random()-0.5)*40}px)`; }
+            document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
+        }
+
+        function triggerFullScreenFlash() {
+            const flash = document.getElementById('fullScreenFlash');
+            flash.classList.add('active'); setTimeout(() => flash.classList.remove('active'), 800);
+            if(state.soundEnabled) playSound(false); 
+        }
+
+        // --- 音效与自动 ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        function playSound(isSmall) {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.setValueAtTime(isSmall?800+Math.random()*50:400, audioCtx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+            g.gain.setValueAtTime(isSmall?0.3:0.6, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + 0.2);
+        }
+
+        let durStartTime = 0;
+        function startDurationRecord() { durStartTime=Date.now(); const btn=document.getElementById('btnRecDuration'); btn.style.color="var(--error)"; btn.innerText="🔴 录制中..."; }
+        function stopDurationRecord() {
+            const btn = document.getElementById('btnRecDuration'); btn.style.color="var(--text)";
+            let duration = Date.now() - durStartTime;
+            if (duration < 300) { btn.innerText="⚠️ 太短"; setTimeout(()=>btn.innerText="⏱ 按住念一遍",1500); return; }
+            let sec = duration/1000; if(sec>60) sec=60;
+            updateAutoInterval(sec); btn.innerText=`✅ 设定 ${sec.toFixed(1)}s`; setTimeout(()=>btn.innerText="⏱ 按住念一遍",2000);
+        }
+        function updateAutoInterval(sec) {
+            autoState.interval = sec * 1000; document.getElementById('speedRange').value = sec;
+            document.getElementById('speedVal').innerText = sec.toFixed(1) + "s";
+            if(autoState.running) { clearInterval(autoState.timer); autoState.timer=setInterval(()=>triggerBeat(null,null,true),autoState.interval); }
+        }
+        function toggleAutoTimer() {
+            const btn = document.getElementById('autoBtnText');
+            if(autoState.running) { clearInterval(autoState.timer); autoState.running=false; btn.innerText="▶ 启动"; document.getElementById('btnAutoToggle').classList.remove('active'); }
+            else { triggerBeat(null,null,true); autoState.timer=setInterval(()=>triggerBeat(null,null,true),autoState.interval); autoState.running=true; btn.innerText="⏸ 暂停"; document.getElementById('btnAutoToggle').classList.add('active'); }
+        }
+
+        // --- 数据 ---
+        function checkDailyReset() {
+            const d=new Date(); const s=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+            if(state.lastDate!==s && state.lastDate!=="") { state.todayCount=0; }
+            state.lastDate=s; saveState();
+        }
+        function manualAdd() {
+            const val=parseInt(document.getElementById('inputAdd').value);
+            if(val>0) { state.todayCount+=val; state.totalCount+=val; checkLotusGrowth(); saveState(); render(); document.getElementById('inputAdd').value=""; alert(`已补录 ${val} 遍`); }
+        }
+        function resetTodayData() { if(confirm("清空今日计数？")) { state.todayCount=0; saveState(); render(); } }
+        function resetTotalData() { if(confirm("⚠ 清空所有数据（含莲花）？")) { state.todayCount=0; state.totalCount=0; state.lotusSeeds=[]; initLotusPond(); saveState(); render(); } }
+        function render() {
+            document.getElementById('todayCountDisplay').innerText = state.todayCount;
+            document.getElementById('totalDisplay').innerText = state.totalCount;
+            document.getElementById('dateDisplay').innerText = state.lastDate.replace(/-/g,'.');
+            document.getElementById('mantraText').innerText = state.mantra;
+            document.getElementById('targetDisplay').innerText = state.dailyTarget;
+            document.getElementById('totalTargetDisplay').innerText = state.totalTarget || "∞";
+            // Settings
+            document.getElementById('inputMantra').value = state.mantra;
+            document.getElementById('inputTarget').value = state.dailyTarget;
+            document.getElementById('inputTotalTarget').value = state.totalTarget;
+            document.getElementById('inputLotusRate').value = state.lotusRate;
+            document.getElementById('inputImg').value = state.imgUrl;
+            if(state.imgUrl) document.getElementById('totem').style.backgroundImage = `url(${state.imgUrl})`;
+            let pct = Math.min(100, (state.todayCount/state.dailyTarget)*100);
+            document.getElementById('progressFill').style.width = pct + "%";
+        }
+        function togglePanel(id) {
+            const p=document.getElementById('autoPanel'); const btn=document.getElementById('btnAutoToggle');
+            if(p.style.display==='flex'){p.style.display='none';btn.classList.remove('active');} else {p.style.display='flex';btn.classList.add('active');}
+        }
+        function openSettings(){document.getElementById('settingsModal').style.display='flex';}
+        function saveSettings(){ 
+            state.mantra=document.getElementById('inputMantra').value||"无念";
+            state.dailyTarget=document.getElementById('inputTarget').value||108;
+            state.totalTarget=document.getElementById('inputTotalTarget').value||100000;
+            state.lotusRate=parseInt(document.getElementById('inputLotusRate').value)||30;
+            state.imgUrl=document.getElementById('inputImg').value;
+            saveState(); render(); checkLotusGrowth(); document.getElementById('settingsModal').style.display='none';
+        }
+        function toggleSound(){state.soundEnabled=!state.soundEnabled; document.getElementById('soundBtn').style.opacity=state.soundEnabled?1:0.4;}
+        
+        function saveState(){localStorage.setItem('mantraV18', JSON.stringify(state));}
+        function loadState(){
+            const s=localStorage.getItem('mantraV18'); 
+            if(s) { 
+                state={...state, ...JSON.parse(s)}; 
+                if(!state.lotusSeeds) state.lotusSeeds=[]; 
+                if(!state.lotusRate) state.lotusRate=30; 
+            }
+        }
+        document.getElementById('settingsModal').addEventListener('click',e=>{if(e.target.id==='settingsModal')e.target.style.display='none';});
+
+    </script>
+</body>
+</html>
