@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筑基：普通人改命的底层逻辑</title>
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --bg-dark: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-gray: #b0b0b0;
+            --accent-blue: #00d4ff;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 英雄海报区 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: 8px;
+            color: var(--primary-gold);
+        }
+
+        .hero p {
+            color: var(--text-gray);
+            max-width: 600px;
+            font-size: 1.1rem;
+        }
+
+        /* 核心内容区 */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            border-left: 4px solid var(--primary-gold);
+            padding-left: 15px;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        /* 交互卡片 */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-gold);
+        }
+
+        /* 第一章：系统稳定性 */
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            width: 30%; /* 初始低稳定性 */
+            transition: width 1s ease;
+        }
+
+        /* 第二章：翻转卡片 */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .flip-card {
+            perspective: 1000px;
+            height: 200px;
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card:hover .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .flip-front { background: #222; border: 1px solid #444; }
+        .flip-back { background: var(--primary-gold); color: black; transform: rotateY(180deg); font-weight: bold; }
+
+        /* 第三章：认知交互 */
+        .logic-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logic-btn:hover {
+            background: var(--accent-blue);
+            color: black;
+        }
+
+        /* 脚注 */
+        footer {
+            text-align: center;
+            padding: 60px;
+            border-top: 1px solid #222;
+            color: var(--text-gray);
+        }
+
+        .gold-text { color: var(--primary-gold); }
+
+        @media (max-width: 600px) {
+            .skill-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>筑基</h1>
+        <p>普通人生活中最大的障碍，不是没条件没资源，而是当机会摆在面前的时候，总是不能很好的抓住 [cite: 3]。</p>
+        <div style="margin-top: 30px; color: var(--primary-gold); cursor: pointer;" onclick="document.getElementById('content').scrollIntoView({behavior: 'smooth'})">
+            向下滚动开启重构 ▽
+        </div>
+    </section>
+
+    <div class="container" id="content">
+        
+        <h2 class="section-title">01. 稳定状态：你的“操作系统”</h2>
+        <div class="card">
+            <div class="system-status">● 系统自检：运行中 (发现内耗 Bug)</div>
+            <p>价值观不稳定会导致纠结迷茫，产生无穷的焦虑和内耗 [cite: 6]。你需要一个像电脑操作系统一样平稳的底层，才能把性能发挥到极致 [cite: 12]。</p>
+            <div class="progress-bar"><div class="progress-fill" id="p1"></div></div>
+            <ul>
+                <li><strong>毅力稳定：</strong>告别三分钟热度 [cite: 7]。</li>
+                <li><strong>情感稳定：</strong>不为无望的投入盲目坚持 [cite: 8]。</li>
+                <li><strong>情绪稳定：</strong>不被随随便便的人和事左右 [cite: 9]。</li>
+            </ul>
+            <button class="logic-btn" onclick="document.getElementById('p1').style.width='100%'">点击优化稳定性</button>
+        </div>
+
+        <h2 class="section-title">02. 吃饭本领：生存的金刚钻</h2>
+        <p>这是你混社会的资本，解决问题的金刚钻，无后顾之忧的依靠 [cite: 14]。</p>
+        <div class="skill-grid">
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="flip-front">缺乏核心技能</div>
+                    <div class="flip-back">生存基础被别人把握，命不由己 [cite: 21]。</div>
+                </div>
+            </div>
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="flip-front">拥有可靠技能</div>
+                    <div class="flip-back">拥有不用卑躬屈膝、妥协忍让的资格 [cite: 20]。</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">03. 认知思维：力量决定一切</h2>
+        <div class="card">
+            <p>为什么努力收效甚微？因为你还没建立基础的认知系统 [cite: 22, 24]。</p>
+            <blockquote style="border-left: 2px solid var(--accent-blue); padding-left: 15px; font-style: italic;">
+                “力量在决定一切，结果在证明一切，能力在匹配一切，而行动在改变一切 [cite: 24]。”
+            </blockquote>
+            <p>点击探索底层逻辑：</p>
+            <div class="logic-btn" onclick="alert('社会只看结果，过程是自己独一无二的来时路 [cite: 27]')">关于结果</div>
+            <div class="logic-btn" onclick="alert('力量是底层架构，先有力量后有定义 [cite: 28, 29]')">关于力量</div>
+            <div class="logic-btn" onclick="alert('行动越多，创造越多。想的再多现实不会变化 [cite: 25]')">关于行动</div>
+        </div>
+
+        <h2 class="section-title">04. 中正平和：命运的无形大手</h2>
+        <div class="card" style="border-color: rgba(212, 175, 55, 0.3);">
+            <p>人的德行是命运无形的大手 [cite: 32]。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 200px;">
+                    <h4 class="gold-text">处世之道</h4>
+                    <small>
+                        * 贫苦时不择手段，后面是要还的 [cite: 32]。<br>
+                        * 得势时不傲慢，给人留一线 [cite: 32]。<br>
+                        * 迷茫时不偏激，不随意猜忌外界 [cite: 35]。
+                    </small>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <h4 class="gold-text">善终之基</h4>
+                    <p style="font-size: 0.9rem;">心性不偏移，积累好的因果，格局才不会被生活摧毁 [cite: 36, 37]。</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>修好这四样基础，面对生活时将 <span class="gold-text">如虎添翼，左右逢源</span> [cite: 40]。</p>
+        <p style="font-size: 0.8rem; opacity: 0.5;">© 2026 筑基计划 | 智慧引领人生</p>
+    </footer>
+
+    <script>
+        // 简单的入场动画触发
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    card.style.opacity = '1';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
